@@ -87,3 +87,13 @@ reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemova
 
 %   3.3 Identifier les atomes liés à ces liens
 %   ------------------------------------------
+
+
+
+
+#show atomAddition/3.
+#show atomRemoval/3.
+#show bondAddition/4.
+#show bondRemoval/4.
+#show reactantAtomTransformed/3.
+
