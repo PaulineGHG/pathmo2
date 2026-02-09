@@ -65,21 +65,21 @@ L'objectif est d'intentifier le bloc du CGR regroupant les atomes et liaisons di
 %   ----------------------------------------------------------------------
 
 % Lien créé entre ATOME et Atom2
-reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondAddition(Transformation, BondOrder, AtomPosition, Atom2Position),
-                                                                      reaction(Transformation, Reactant, Product),
-                                                                      atom(Reactant, AtomElement, AtomPosition).
+%reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondAddition(Transformation, BondOrder, AtomPosition, Atom2Position),
+%                                                                     reaction(Transformation, Reactant, Product),
+%                                                                     atom(Reactant, AtomElement, AtomPosition).
 % Lien créé entre ATOME et Atom1
 reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondAddition(Transformation, BondOrder, Atom1Position, AtomPosition),
-                                                                      reaction(Transformation, Reactant, Product),
-                                                                      atom(Reactant, AtomElement, AtomPosition).
+%                                                                      reaction(Transformation, Reactant, Product),
+%                                                                      atom(Reactant, AtomElement, AtomPosition).
 % Lien supprimé entre ATOME et Atom2
-reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemoval(Transformation, BondOrder, AtomPosition, Atom2Position),
-                                                                      reaction(Transformation, Reactant, Product),
-                                                                      atom(Reactant, AtomElement, AtomPosition).
+%reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemoval(Transformation, BondOrder, AtomPosition, Atom2Position),
+%                                                                      reaction(Transformation, Reactant, Product),
+%                                                                      atom(Reactant, AtomElement, AtomPosition).
 % Lien supprimé entre ATOME et Atom2
-reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemoval(Transformation, BondOrder, Atom1Position, AtomPosition),
-                                                                      reaction(Transformation, Reactant, Product),
-                                                                      atom(Reactant, AtomElement, AtomPosition).
+%reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemoval(Transformation, BondOrder, Atom1Position, AtomPosition),
+%                                                                      reaction(Transformation, Reactant, Product),
+%                                                                      atom(Reactant, AtomElement, AtomPosition).
 
 %   3.2 Identifier les liens liés à ces atomes
 %   ------------------------------------------
@@ -95,5 +95,5 @@ reactantAtomTransformed(Transformation, AtomElement, AtomPosition) :- bondRemova
 #show atomRemoval/3.
 #show bondAddition/4.
 #show bondRemoval/4.
-#show reactantAtomTransformed/3.
+% #show reactantAtomTransformed/3.
 
