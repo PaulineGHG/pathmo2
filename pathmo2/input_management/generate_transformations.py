@@ -1,0 +1,44 @@
+import csv
+from rxnmapper import RXNMapper
+# rxn_mapper = RXNMapper()
+
+
+def extract_chemicals(chem_input):
+    chem_d = dict()
+    with open(chem_input, 'r') as f:
+        dat = csv.reader(f, delimiter='\t')
+        dat.__next__()
+        for l in dat:
+            chem_d[l[0]] = l[1]
+    return chem_d
+
+
+def extract_rxn(rxn_input):
+    r_dict = dict()
+    with open(rxn_input, 'r') as f:
+        dat = csv.reader(f, delimiter='\t')
+        dat.__next__()
+        for l in dat:
+            r_dict[l[0]] = (l[1], l[2])
+    return r_dict
+
+
+def generate_input_transformations(chem_input, rxn_input):
+    c_dict = extract_chemicals(chem_input)
+    r_dict = extract_rxn(rxn_input)
+    rxn_smiles = []
+    for r_id, r in r_dict.items():
+        reactant_smiles = c_dict[r[0]]
+        product_smiles = c_dict[r[1]]
+        rxn_smiles.append(f'{reactant_smiles}>>{product_smiles}')
+    # results = rxn_mapper.get_attention_guided_atom_maps(rxn_smiles)
+    print(rxn_smiles)
+    # print(results)
+
+
+
+C_FILE = '../../Files/Oxylipins/Inputs/Chemicals_input.tsv'
+R_FILE = '../../Files/Oxylipins/Inputs/Reactions_input.tsv'
+
+
+generate_input_transformations(C_FILE, R_FILE)

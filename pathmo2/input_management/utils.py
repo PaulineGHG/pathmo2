@@ -15,6 +15,8 @@ def get_canonical_mol(smiles):
     mol = Chem.MolFromSmiles(smiles)
     sm = Chem.MolToSmiles(mol, canonical=True)
     mol = Chem.MolFromSmiles(sm)
+    # inchi = Chem.MolToInchi(mol)
+    # mol = Chem.MolFromInchi(inchi)
     return mol
 
 
@@ -48,17 +50,26 @@ def mol_to_asp(mol_name, mol_code, encoding=INCHI, domain=False):
     else:
         raise ValueError(f'{encoding} not a valid encoding name, must be in : {[SMILES, INCHI]}')
     atom_lst = []
+    atom_deg = []
+    atom_n_deg = []
     for a in mol.GetAtoms():
         atom_lst.append(a.GetSymbol())
-    atom_pos = simplify_list_with_index(atom_lst)
-
+        atom_deg.append(len(a.GetNeighbors()))
+        atom_n_deg.append('-'.join(sorted([str(len(n.GetNeighbors())) for n in a.GetNeighbors()])))
+    # atom_pos = simplify_list_with_index(atom_lst)
     asp_val = []
-    for a, pos_lst in atom_pos.items():
-        for pos in pos_lst:
-            if pos[0] == pos[1]:
-                asp_val.append(f'{atom_str}("{mol_name}",{pos[0]},{ATOM_CORRESP[a]}).')
-            else:
-                asp_val.append(f'{atom_str}("{mol_name}",{pos[0]}..{pos[1]},{ATOM_CORRESP[a]}).')
+    for i in range(len(atom_lst)):
+        asp_val.append(f'{atom_str}("{mol_name}",'
+                       f'{i+1},'
+                       f'{ATOM_CORRESP[atom_lst[i]]},'
+                       f'{atom_deg[i]},'
+                       f'{atom_n_deg[i]}).')
+    # for a, pos_lst in atom_pos.items():
+    #     for pos in pos_lst:
+    #         if pos[0] == pos[1]:
+    #             asp_val.append(f'{atom_str}("{mol_name}",{pos[0]},{ATOM_CORRESP[a]}).')
+    #         else:
+    #             asp_val.append(f'{atom_str}("{mol_name}",{pos[0]}..{pos[1]},{ATOM_CORRESP[a]}).')
     for b in mol.GetBonds():
         asp_val.append(f'{bond_str}("{mol_name}",'
                        f'{str(b.GetBondType()).lower()},'
@@ -74,7 +85,9 @@ def rxn_to_asp(rxn_name, reactant, product):
 def smiles_to_2d_structure(smiles, output):
     if type(smiles) == str:
         mol = get_canonical_mol(smiles)
-        Draw.MolToFile(mol, output + '.svg', size=(300, 300), imageType='svg')
+        for atom in mol.GetAtoms():
+            atom.SetProp('atomNote', str(atom.GetIdx() + 1))
+        Draw.MolToFile(mol, output, size=(300, 300), imageType='svg')
     elif type(smiles) == dict:
         mol_lst = []
         names_lst = []
@@ -94,6 +107,9 @@ def draw_rxn(sub_smiles, prod_smiles, output):
     rxn = rdChemReactions.ChemicalReaction()
     rxn.AddReactantTemplate(sub)
     rxn.AddProductTemplate(prod)
+
     x = Draw.ReactionToImage(rxn, useSVG=True)
     with open(output + '.svg', 'w') as f:
         f.write(x)
+
+

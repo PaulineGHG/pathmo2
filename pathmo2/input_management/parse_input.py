@@ -1,15 +1,19 @@
 import os.path
 import csv
 from pathmo2.input_management.utils import *
+from rdkit.Chem import rdFMCS
+
 
 
 # CONSTANTS ----------------------------------------------------------------------------------------
 INPUT_DIR = 'Inputs'
 OUTPUT_DIR = 'Outputs'
+DRAWING_DIR = 'Molecules_Draw'
 CHEM_INPUT = 'Chemicals_input.tsv'
 RXN_INPUT = 'Reactions_input.tsv'
 LP_INPUT = 'input.lp'
 
+SUBSTRUCTURE = 'Substructure'
 CHEM = 'Chemical'
 RXN = 'Reaction'
 ROLE = 'ROLE'
@@ -55,6 +59,10 @@ def init_run(name, output_path):
             os.mkdir(run_dir)
             os.mkdir(os.path.join(run_dir, INPUT_DIR))
             os.mkdir(os.path.join(run_dir, OUTPUT_DIR))
+            os.mkdir(os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR))
+            os.mkdir(os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR, SUBSTRUCTURE))
+            os.mkdir(os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR, RXN))
+            os.mkdir(os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR, CHEM))
             with open(os.path.join(run_dir, INPUT_DIR, CHEM_INPUT), 'w') as f:
                 csvwriter = csv.writer(f, delimiter='\t')
                 csvwriter.writerow(CHEM_COLUMNS)
@@ -78,10 +86,32 @@ def generate_lp_input(run_dir, draw=False):
     with open(chem_input, 'r') as cf, open(rxn_input, 'r') as rf, open(lp_input, 'w') as lf:
         chemicals_lst = list(csv.DictReader(cf, delimiter='\t'))
         reactions_lst = list(csv.DictReader(rf, delimiter='\t'))
+        get_common_substructures(chemicals_lst, run_dir)
+        get_rxn_substructures(chemicals_lst, reactions_lst, run_dir)
         write_chemicals(chemicals_lst, lf)
         write_reactions(reactions_lst, [ch[CHEM] for ch in chemicals_lst], lf)
-        if draw:
-            draw_inputs(chemicals_lst, reactions_lst, run_dir)
+    if draw:
+        draw_inputs(chemicals_lst, reactions_lst, run_dir)
+
+
+def get_common_substructures(chemicals_lst, run_dir):
+    molecules = [chem for chem in chemicals_lst if chem[ROLE] != DOMAIN]
+    res = rdFMCS.FindMCS([Chem.MolFromSmiles(mol[SMILES]) for mol in molecules])
+    domain = Chem.MolFromSmarts(res.smartsString)
+    domain_smiles = Chem.MolToSmiles(domain)
+    output = os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR, SUBSTRUCTURE, 'common_substructure.svg')
+    smiles_to_2d_structure(domain_smiles, output)
+
+
+def get_rxn_substructures(chemicals_lst, reactions_lst, run_dir):
+    chem_smiles = {x[CHEM]: x[SMILES] for x in chemicals_lst}
+    for rxn in reactions_lst:
+        res = rdFMCS.FindMCS([Chem.MolFromSmiles(chem_smiles[rxn[REACTANT]]),
+                              Chem.MolFromSmiles(chem_smiles[rxn[PRODUCT]])])
+        domain = Chem.MolFromSmarts(res.smartsString)
+        domain_smiles = Chem.MolToSmiles(domain)
+        output = os.path.join(run_dir, OUTPUT_DIR, DRAWING_DIR, SUBSTRUCTURE, f'{rxn[RXN]}_substructure.svg')
+        smiles_to_2d_structure(domain_smiles, output)
 
 
 def write_chemicals(chemicals_lst, lp_f):
@@ -127,7 +157,9 @@ def write_reactions(reactions_lst, chemicals_ids, lp_f):
 
 def draw_inputs(chemicals_lst, reactions_lst, run_path):
     chem_smiles = {x[CHEM]: x[SMILES] for x in chemicals_lst}
-    smiles_to_2d_structure(chem_smiles, os.path.join(run_path, OUTPUT_DIR))
+    for chem, smiles in chem_smiles.items():
+        smiles_to_2d_structure(smiles, os.path.join(run_path, OUTPUT_DIR, DRAWING_DIR, CHEM, f'{chem}.svg'))
     for rxn in reactions_lst:
-        draw_rxn(chem_smiles[rxn[REACTANT]], chem_smiles[rxn[PRODUCT]], rxn)
+        draw_rxn(chem_smiles[rxn[REACTANT]], chem_smiles[rxn[PRODUCT]],
+                 os.path.join(run_path, OUTPUT_DIR, DRAWING_DIR, RXN, rxn[RXN]))
 
