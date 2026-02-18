@@ -68,8 +68,8 @@ def generate_transformations(run_path):
 
 # ==================================================================================================
 
-# RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
-RUN_PATH = 'C:\\Users\Octav\PycharmProjects\pathmodel\Files'
+RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
+# RUN_PATH = 'C:\\Users\Octav\PycharmProjects\pathmodel\Files'
 RUN_NAME = 'ToyExemple'
 
 # generate_lp_input(os.path.join(RUN_PATH, RUN_NAME), True)
