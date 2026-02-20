@@ -14,18 +14,21 @@ def generate_transformations(run_path):
 
     """
     print('~~~~~Creation of Reaction~~~~~')
-    reaction_site_extraction_script = os.path.join(*[ROOT, 'asp', 'TransformationsExtraction.lp'])
+    transformations_script = os.path.join(*[ROOT, 'asp', 'TransformationsExtraction.lp'])
     input_file = os.path.join(run_path, INPUT_DIR, LP_INPUT)
 
-    reaction_solver = clyngor.solve([input_file, reaction_site_extraction_script], use_clingo_module=False)
-    print(reaction_solver)
-    reaction_results = []
+    reaction_solver = clyngor.solve([input_file, transformations_script], use_clingo_module=False)
+    result_atoms = []
     transformation_reactants = {}
     transformation_products = {}
     reactions = []
     for atom in next(reaction_solver.parse_args.int_not_parsed.sorted):
         print(atom)
-    #     reaction_results.append(atom[0] + '(' + ','.join(atom[1]) + ')')
+        result_atoms.append(atom[0] + '(' + ', '.join(atom[1]) + ')')
+
+
+    print(result_atoms)
+
     #     if 'diff' in atom[0]:
     #         reaction_id = atom[1][0]
     #         substructures = atom[1][1:]
