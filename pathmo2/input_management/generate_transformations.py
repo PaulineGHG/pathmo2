@@ -1,6 +1,8 @@
 import csv
 from rxnmapper import RXNMapper
-# rxn_mapper = RXNMapper()
+from rdkit.Chem import AllChem
+from rdkit.Chem import Draw
+rxn_mapper = RXNMapper()
 
 
 def extract_chemicals(chem_input):
@@ -31,9 +33,17 @@ def generate_input_transformations(chem_input, rxn_input):
         reactant_smiles = c_dict[r[0]]
         product_smiles = c_dict[r[1]]
         rxn_smiles.append(f'{reactant_smiles}>>{product_smiles}')
-    # results = rxn_mapper.get_attention_guided_atom_maps(rxn_smiles)
-    print(rxn_smiles)
-    # print(results)
+    results = rxn_mapper.get_attention_guided_atom_maps(rxn_smiles)
+    i = 0
+    for res in results:
+        i += 1
+        mapped_rxn = res['mapped_rxn']
+        rxn = AllChem.ReactionFromSmarts(mapped_rxn)
+        d2d = Draw.MolDraw2DCairo(1600, 600)
+        d2d.DrawReaction(rxn)
+        png = d2d.GetDrawingText()
+        open('rxn_mapped' + str(i) + '.png', 'wb+').write(png)
+
 
 
 

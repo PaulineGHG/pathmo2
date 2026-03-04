@@ -49,7 +49,12 @@ def generate_transformations(run_path):
     print(product_transformation_centers)
     print(reactant_transformation_centers)
 
-    export_transformations_patterns(product_transformation_centers, reactant_transformation_centers)
+    product_mol, reactant_mol = export_transformations_patterns(product_transformation_centers, reactant_transformation_centers)
+    mol_test = 'CCC1OC1CCCCCC(=O)O'
+    mol_test2 = 'CCCC(O)CCCCCC(=O)O'
+    hypothetical_mol = Chem.MolFromSmiles(mol_test)
+    substructure_search(hypothetical_mol, product_mol, reactant_mol)
+
     return result_atoms, transformations, product_transformation_centers, reactant_transformation_centers
 
 
@@ -80,16 +85,22 @@ RDKIT_BONDS = {"simple": Chem.BondType.SINGLE,
                "triple": Chem.BondType.TRIPLE,
                "aromatic": Chem.BondType.AROMATIC}
 
+
 def export_transformations_patterns(product_transformation_centers, reactant_transformation_centers):
+    product_mol = {}
+    reactant_mol = {}
     for trans_name, trans_lst in product_transformation_centers.items():
         trans_atoms = [x for x in trans_lst if x[0] == 'productTransformationCenterAtom']
         trans_bonds = [x for x in trans_lst if x[0] == 'productTransformationCenterBond']
-        asp_to_mol(trans_atoms, trans_bonds)
+        mol = asp_to_mol(trans_atoms, trans_bonds)
+        product_mol[trans_name] = mol
 
     for trans_name, trans_lst in reactant_transformation_centers.items():
         trans_atoms = [x for x in trans_lst if x[0] == 'reactantTransformationCenterAtom']
         trans_bonds = [x for x in trans_lst if x[0] == 'reactantTransformationCenterBond']
-        asp_to_mol(trans_atoms, trans_bonds)
+        mol = asp_to_mol(trans_atoms, trans_bonds)
+        reactant_mol[trans_name] = mol
+    return product_mol, reactant_mol
 
 
 def asp_to_mol(atoms, bonds):
@@ -113,14 +124,55 @@ def asp_to_mol(atoms, bonds):
     return mol
 
 
-
+def substructure_search(hypothetical_mol, product_pattern, reactant_pattern):
+    for trans, pattern in reactant_pattern.items():
+        if hypothetical_mol.HasSubstructMatch(pattern):
+            substructure_matches = hypothetical_mol.GetSubstructMatch(pattern)
+            for p_idx, m_idx in enumerate(substructure_matches):
+                print(f"Pattern atom {p_idx+1} → Mol atom {m_idx+1}")
+        # for atom in hypothetical_mol.GetAtoms():
+        #     atom.SetProp('atomNote', str(atom.GetIdx() + 1))
+        # Draw.MolToFile(hypothetical_mol, 'hyp_mol.svg', size=(300, 300), imageType='svg')
+        # for atom in pattern.GetAtoms():
+        #     atom.SetProp('atomNote', str(atom.GetIdx() + 1))
+        # Draw.MolToFile(pattern, 'pat_mol.svg', size=(300, 300), imageType='svg')
+        # from skfp.fingerprints import MACCSFingerprint, PubChemFingerprint
+        # fp_maccs = MACCSFingerprint(n_jobs=-1)
+        # fp_maccs_count = MACCSFingerprint(count=True, n_jobs=-1)
+        #
+        # fp_pubchem = PubChemFingerprint(n_jobs=-1)
+        # fp_pubchem_count = PubChemFingerprint(count=True, n_jobs=-1)
+        #
+        # mols = [hypothetical_mol, pattern]
+        # X_maccs = fp_maccs.transform(mols)
+        # X_maccs_count = fp_maccs_count.transform(mols)
+        #
+        # X_pubchem = fp_pubchem.transform(mols)
+        # X_pubchem_count = fp_pubchem_count.transform(mols)
+        # print("Binary MACCS:")
+        # print(f"Shape: {X_maccs.shape}")
+        # print(f"Example values: {X_maccs[0, -10:]}")
+        # print()
+        # print("Count MACCS:")
+        # print(f"Shape: {X_maccs_count.shape}")
+        # print(f"Example values: {X_maccs_count[0, -10:]}")
+        # print()
+        # print("Binary PubChem:")
+        # print(f"Shape: {X_pubchem.shape}")
+        # print(f"Example values: {X_pubchem[0, :10]}")
+        # print()
+        # print("Count PubChem:")
+        # print(f"Shape: {X_pubchem_count.shape}")
+        # print(f"Example values: {X_pubchem_count[0, :10]}")
+        # print()
 
 
 # ==================================================================================================
 
-# RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
-RUN_PATH = 'C:\\Users\\Octav\\PycharmProjects\\pathmodel\\Files'
+RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
+# RUN_PATH = 'C:\\Users\\Octav\\PycharmProjects\\pathmodel\\Files'
 RUN_NAME = 'ToyExemple'
+
 
 # generate_lp_input(os.path.join(RUN_PATH, RUN_NAME), True)
 generate_transformations(os.path.join(RUN_PATH, RUN_NAME))
