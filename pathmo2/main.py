@@ -19,6 +19,7 @@ def generate_transformations(run_path):
     transformations_script = os.path.join(*[ROOT, 'asp', 'TransformationsExtraction.lp'])
     input_file = os.path.join(run_path, INPUT_DIR, LP_INPUT)
 
+
     reaction_solver = clyngor.solve([input_file, transformations_script], use_clingo_module=False)
     result_atoms = []
     transformations = {}
@@ -47,7 +48,10 @@ def generate_transformations(run_path):
     print(transformations)
     print(product_transformation_centers)
     print(reactant_transformation_centers)
+
+    export_transformations_patterns(product_transformation_centers, reactant_transformation_centers)
     return result_atoms, transformations, product_transformation_centers, reactant_transformation_centers
+
 
     # output_folder = os.path.join(run_path, OUTPUT_DIR)
     # pathmodel_output_transformation_path = os.path.join(output_folder, 'pathmodel_data_transformations.tsv')
@@ -71,14 +75,51 @@ def generate_transformations(run_path):
     # return reaction_result
 
 
-def export_transformations_patterns():
-    product_transformation_pattern = rdkit.Chem.Mol
+RDKIT_BONDS = {"simple": Chem.BondType.SINGLE,
+               "double": Chem.BondType.DOUBLE,
+               "triple": Chem.BondType.TRIPLE,
+               "aromatic": Chem.BondType.AROMATIC}
+
+def export_transformations_patterns(product_transformation_centers, reactant_transformation_centers):
+    for trans_name, trans_lst in product_transformation_centers.items():
+        trans_atoms = [x for x in trans_lst if x[0] == 'productTransformationCenterAtom']
+        trans_bonds = [x for x in trans_lst if x[0] == 'productTransformationCenterBond']
+        asp_to_mol(trans_atoms, trans_bonds)
+
+    for trans_name, trans_lst in reactant_transformation_centers.items():
+        trans_atoms = [x for x in trans_lst if x[0] == 'reactantTransformationCenterAtom']
+        trans_bonds = [x for x in trans_lst if x[0] == 'reactantTransformationCenterBond']
+        asp_to_mol(trans_atoms, trans_bonds)
+
+
+def asp_to_mol(atoms, bonds):
+    re_numbering = {}
+    mol = Chem.RWMol()
+    mol_atom_pos = 0
+    for asp_atom in atoms:
+        atom_symbol = asp_atom[1][1].upper()
+        atom_position = asp_atom[1][2]
+        re_numbering[atom_position] = mol_atom_pos
+        mol.AddAtom(Chem.Atom(atom_symbol))
+        mol_atom_pos += 1
+    for asp_atom in bonds:
+        bond_atom1 = re_numbering[asp_atom[1][1]]
+        bond_atom2 = re_numbering[asp_atom[1][2]]
+        bond_order = RDKIT_BONDS[asp_atom[1][3]]
+        if mol.GetBondBetweenAtoms(bond_atom1, bond_atom2) is None:
+            mol.AddBond(bond_atom1, bond_atom2, bond_order)
+    mol = mol.GetMol()
+    Chem.SanitizeMol(mol)
+    return mol
+
+
+
 
 
 # ==================================================================================================
 
-RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
-# RUN_PATH = 'C:\\Users\Octav\PycharmProjects\pathmodel\Files'
+# RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
+RUN_PATH = 'C:\\Users\\Octav\\PycharmProjects\\pathmodel\\Files'
 RUN_NAME = 'ToyExemple'
 
 # generate_lp_input(os.path.join(RUN_PATH, RUN_NAME), True)
