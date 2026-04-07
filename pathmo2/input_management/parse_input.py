@@ -4,7 +4,6 @@ from pathmo2.input_management.utils import *
 from rdkit.Chem import rdFMCS
 
 
-
 # CONSTANTS ----------------------------------------------------------------------------------------
 INPUT_DIR = 'Inputs'
 OUTPUT_DIR = 'Outputs'
@@ -32,24 +31,6 @@ TARGET = 'TARGET'
 
 CHEM_COLUMNS = [CHEM, SMILES, ROLE, MZ, ORIGIN, LINKS]
 RXN_COLUMNS = [RXN, REACTANT, PRODUCT, ORIGIN, LINKS, EC, TAXON]
-
-
-#     if draw:
-#         smiles_to_2d_structure(data[MOL], input_file.replace('.yaml', ''))
-#         for rxn, v in data[RXN].items():
-#             draw_rxn(data[MOL][v[0]], data[MOL][v[1]], rxn)
-
-#         # MZ
-#         if data[MZR] is not None:
-#             f.write(f'\n%*\nMZ RATIO\n{100 * "="}\n*%\n\n')
-#             for mz in data[MZR]:
-#                 f.write(f'mzfiltering({mz}).\n')
-
-#         # ABSENT
-#         if data[ABS] is not None:
-#             f.write(f'\n%*\nABSENT MOLECULES\n{100 * "="}\n*%\n\n')
-#             for abs_mol in data[ABS]:
-#                 f.write(f'absentmolecules("{abs_mol}").\n')
 
 
 def init_run(name, output_path):

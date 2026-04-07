@@ -19,7 +19,6 @@ def generate_transformations(run_path):
     transformations_script = os.path.join(*[ROOT, 'asp', 'TransformationsExtraction.lp'])
     input_file = os.path.join(run_path, INPUT_DIR, LP_INPUT)
 
-
     reaction_solver = clyngor.solve([input_file, transformations_script], use_clingo_module=False)
     result_atoms = []
     transformations = {}
