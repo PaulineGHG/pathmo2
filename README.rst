@@ -17,9 +17,7 @@
 PathModel: inferring new biochemical reactions and metabolite structures to understand metabolic pathway drift 
 ==============================================================================================================
 
-PathModel is a prototype to infer new biochemical reactions and new metabolite structures. The biological motivation for developing it is described in this `article <https://doi.org/10.1016/j.isci.2020.100849>`__, published in `iScience <https://www.cell.com/iscience/home>`__.  You can also watch the `associated presentation <https://relaiswebcasting.mediasite.com/mediasite/Play/55fa04573fd14bd5bf3b31acff74cb131d?catalog=e534823f0c954836bf85bfa80af2290921>`__ at the `JOBIM2020 conference <https://jobim2020.sciencesconf.org/>`__.
-
-There is no guarantee that this script will work, it is a Work In Progress in early state.
+PathModel is a prototype to infer new biochemical reactions and new metabolite structures. The biological motivation for developing it is described in this `article <https://doi.org/10.1016/j.isci.2020.100849>`__, published in `iScience <https://www.cell.com/iscience/home>`__.  You can also watch the `associated presentation <https://gdr3692.wixsite.com/gdrge/copie-de-journ%C3%A9e-l-inconnu-inconnu>`__ at the `GDRGE Website <https://gdr3692.wixsite.com/gdrge>`__.
 
 .. contents:: Table of contents
    :backlinks: top
@@ -32,7 +30,7 @@ Description
 Metabolic Pathway Drift Hypothesis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Metabolic Pathway Drift hypothesizes that metabolic pathways can be conserved even if their biochemical reactions undergo variations. These variations can be non-orthologous displacement of genes or changes in enzyme order.
+Metabolic Pathway Drift hypothesizes that metabolic pathways can be conserved even if their biochemical reactions undergo variations. These variations can be non-orthologous displacement of genes or changes in enzyme order. Empirical support for such a mechanism is discussed extensively in `this review <https://doi.org/10.3389/fpls.2024.1339132>`__.
 
 .. table::
    :align: center
@@ -968,12 +966,14 @@ Furthermore, Aplysiapalythine A has been detected in red algae (the group in whi
 Data
 ----
 
-In the GitHub repository (`pathmodel/pathmodel/data/ <https://github.com/pathmodel/pathmodel/tree/master/pathmodel/data>`__), there are 4 data files:
+In the GitHub repository (`pathmodel/pathmodel/data/ <https://github.com/pathmodel/pathmodel/tree/master/pathmodel/data>`__), there are 5 data files:
 
-- ``MAA_pwy.lp``: Mycosporine Amino-Acids Like pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__).
+- ``MAA_pwy.lp``: Mycosporine Amino-Acids Like pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__). It turned out that the metabolite inferred as MAA2 in our study is actually aplysiapalytin, initially found in sea hare [Kamio2011], 
+and later on found also in several red algae [Orfanoudaki2019].
 - ``sterol_pwy.lp``: Sterol pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__).
 - ``brown_sterols_pwy.lp``: Sterol pathways in Brown algae (`Girard et al., 2021 <https://doi.org/10.3389/fpls.2021.648426>`__).
 - ``mozukulins_pwy.lp``: Mozukulins and sterol pathway in the brown alga *Cladosiphon okamuranus* (`Girard et al., 2021 <https://doi.org/10.3389/fpls.2021.648426>`__).
+- ``oxylipins_pwy.lp`` is work in progress on brown algal oxylipins.
 
 
 Citation
