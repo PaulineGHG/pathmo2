@@ -968,8 +968,7 @@ Data
 
 In the GitHub repository (`pathmodel/pathmodel/data/ <https://github.com/pathmodel/pathmodel/tree/master/pathmodel/data>`__), there are 5 data files:
 
-- ``MAA_pwy.lp``: Mycosporine Amino-Acids Like pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__). It turned out that the metabolite inferred as MAA2 in our study is actually aplysiapalytin, initially found in sea hare [Kamio2011], 
-and later on found also in several red algae [Orfanoudaki2019].
+- ``MAA_pwy.lp``: Mycosporine Amino-Acids Like pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__). It turned out that the metabolite inferred as MAA2 in our study is actually aplysiapalytin A, initially isolated in sea hare [Kamio2011]_, and later on found also in several red algae [Orfanoudaki2019]_.
 - ``sterol_pwy.lp``: Sterol pathways according to data from *Chondrus crispus* (`Belcour et al, 2020 <https://doi.org/10.1016/j.isci.2020.100849>`__).
 - ``brown_sterols_pwy.lp``: Sterol pathways in Brown algae (`Girard et al., 2021 <https://doi.org/10.3389/fpls.2021.648426>`__).
 - ``mozukulins_pwy.lp``: Mozukulins and sterol pathway in the brown alga *Cladosiphon okamuranus* (`Girard et al., 2021 <https://doi.org/10.3389/fpls.2021.648426>`__).
