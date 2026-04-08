@@ -61,9 +61,7 @@ def mol_to_asp(mol_name, mol_code, encoding=INCHI, domain=False):
     for i in range(len(atom_lst)):
         asp_val.append(f'{atom_str}("{mol_name}",'
                        f'{i+1},'
-                       f'{ATOM_CORRESP[atom_lst[i]]},'
-                       f'{atom_deg[i]},'
-                       f'{atom_n_deg[i]}).')
+                       f'{ATOM_CORRESP[atom_lst[i]]}).')
     # for a, pos_lst in atom_pos.items():
     #     for pos in pos_lst:
     #         if pos[0] == pos[1]:
@@ -78,8 +76,11 @@ def mol_to_asp(mol_name, mol_code, encoding=INCHI, domain=False):
     return asp_val
 
 
-def rxn_to_asp(rxn_name, reactant, product):
-    return f'reaction({rxn_name},"{reactant}","{product}").\n'
+def rxn_to_asp(rxn, reactants, products, direction, lp_f):
+    for r in reactants:
+        lp_f.write(f'reactant({rxn},"{r}","{direction}").\n')
+    for p in products:
+        lp_f.write(f'product({rxn},"{p}","{direction}").\n')
 
 
 def smiles_to_2d_structure(smiles, output):
