@@ -1,4 +1,5 @@
-import csv
+# IMPORTS
+# --------------------------------------------------------------------------------------------------
 import json
 import os.path
 from utils import mol_to_asp, rxn_to_asp
@@ -6,6 +7,9 @@ from utils import mol_to_asp, rxn_to_asp
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
+
+# CONSTANTS
+# --------------------------------------------------------------------------------------------------
 METACYC_MAPPING_FILE = '../data/atom-mappings-smarts.json'
 METACYC_REACTIONS_FILE = '../data/reactions.json'
 METACYC_COMPOUNDS_FILE = '../data/compounds.json'
@@ -14,6 +18,10 @@ INPUTS_DIR = 'Inputs'
 OUTPUTS_DIR = 'Outputs'
 
 
+# FUNCTIONS
+# --------------------------------------------------------------------------------------------------
+
+# Main Function
 def generate_input(run_name, output_path, source, target, metacyc_ref_reactions):
 
     # MANAGE DIRECTORIES
@@ -52,6 +60,7 @@ def generate_input(run_name, output_path, source, target, metacyc_ref_reactions)
                                           str(rxn_info[1]), str(rxn_info[2]), map_data[rxn_id]]))
 
 
+# Source data extraction functions
 def import_metacyc(metacyc_ref_reactions, rxn_data, cpd_data, map_data):
     # EXTRACT RXN DATA
     with open(METACYC_REACTIONS_FILE, 'r') as f:
@@ -91,13 +100,7 @@ def import_metacyc(metacyc_ref_reactions, rxn_data, cpd_data, map_data):
     return rxn_data, cpd_data, map_data
 
 
-def draw_rxn(rxn, output):
-    d2d = Draw.MolDraw2DCairo(1600, 600)
-    d2d.DrawReaction(rxn, highlightByReactant=False)
-    png = d2d.GetDrawingText()
-    open(output, 'wb+').write(png)
-
-
+# LP writing functions
 def write_chemicals(source, target, rxn_chemicals_lst, lp_f):
     lp_f.write(f'\n%*\nCHEMICALS\n{100 * "="}\n*%\n')
     for chem_id, smile in {**source, **target, **rxn_chemicals_lst}.items():
@@ -161,6 +164,16 @@ def write_mappings(mappings_data, mapping_dir, lp_f):
 
         draw_rxn(rxn, os.path.join(mapping_dir, rxn_id + '.png'))
 
+
+# Mol Draw functions
+def draw_rxn(rxn, output):
+    d2d = Draw.MolDraw2DCairo(1600, 600)
+    d2d.DrawReaction(rxn, highlightByReactant=False)
+    png = d2d.GetDrawingText()
+    open(output, 'wb+').write(png)
+
+
+# --------------------------------------------------------------------------------------------------
 
 RUN_NAME = 'OXY'
 RUN_PATH = '/home/phamongi/Documents/Dev/pathmodel/Files'
