@@ -10,9 +10,10 @@ from rdkit.Chem import Draw
 
 # CONSTANTS
 # --------------------------------------------------------------------------------------------------
-METACYC_MAPPING_FILE = '../data/atom-mappings-smarts.json'
-METACYC_REACTIONS_FILE = '../data/reactions.json'
-METACYC_COMPOUNDS_FILE = '../data/compounds.json'
+CUR_PATH = os.path.dirname(os.path.realpath(__file__))
+METACYC_MAPPING_FILE = os.path.join(CUR_PATH, '..', 'data', 'atom-mappings-smarts.json')
+METACYC_REACTIONS_FILE = os.path.join(CUR_PATH, '..', 'data', 'reactions.json')
+METACYC_COMPOUNDS_FILE = os.path.join(CUR_PATH, '..', 'data', 'compounds.json')
 
 INPUTS_DIR = 'Inputs'
 OUTPUTS_DIR = 'Outputs'
