@@ -1,9 +1,9 @@
 import os
 import csv
 import clyngor
-import rdkit.Chem
+from rdkit import Chem
 
-from pathmo2.input_management.parse_input import *
+from pathmo2.inputs_generation import *
 
 
 ROOT = os.path.dirname(__file__)
@@ -17,7 +17,7 @@ def generate_transformations(run_path):
     """
     print('~~~~~Creation of Reaction~~~~~')
     transformations_script = os.path.join(*[ROOT, 'asp', 'TransformationsExtraction.lp'])
-    input_file = os.path.join(run_path, INPUT_DIR, LP_INPUT)
+    input_file = os.path.join(run_path, INPUTS_DIR, 'input.lp')
 
     reaction_solver = clyngor.solve([input_file, transformations_script], use_clingo_module=False)
     result_atoms = []

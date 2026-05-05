@@ -1,6 +1,6 @@
 import os.path
 import csv
-from pathmo2.input_management.utils import *
+from pathmo2.utils import *
 from rdkit.Chem import rdFMCS
 
 

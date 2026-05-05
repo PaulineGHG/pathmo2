@@ -2,7 +2,7 @@ import os.path
 import shutil
 
 from pathmodel.plotting import *
-from utils import *
+from pathmo2.utils import *
 
 
 PROD = 'product'
